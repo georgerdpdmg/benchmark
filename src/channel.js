@@ -81,5 +81,5 @@ const html = `
 const blob = new Blob([html], { type: "text/html" });
 const anchor = document.createElement("a");
 anchor.href = URL.createObjectURL(blob);
-anchor.download = "scripts-loaded-before-sophi-article-id-.html";
+anchor.download = "scripts-loaded-before-sophi-channel-page-.html";
 anchor.click();
