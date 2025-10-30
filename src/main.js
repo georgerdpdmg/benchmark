@@ -1,22 +1,32 @@
-const entries = performance.getEntriesByType('resource')
-  .filter(item => item.initiatorType === 'script')
+const entries = performance
+  .getEntriesByType("resource")
+  .filter((item) => item.initiatorType === "script")
   .sort((a, b) => a.startTime - b.startTime);
 
-const target = entries.findIndex(e => e.name.includes('myFile.js'));
-const before = target >= 0 ? entries.slice(0, target) : entries;
+const target = entries.findIndex((e) =>
+  e.name.includes(
+    "https://cdn.sophi.io/assets/demeter/1/stable/333432218.js?isConsented=true"
+  )
+);
+const itemsBeforeSophi = target >= 0 ? entries.slice(0, target) : entries;
 
-const data = before.map((item, index) => ({
-  name: (index + 1) + '. ' + item.name,
-  start: item.startTime.toFixed(2),
-  duration: item.duration.toFixed(2),
-  size: item.transferSize,
-  encoded: item.encodedBodySize,
-  decoded: e.decodedBodySize
-}));
+const data = itemsBeforeSophi.map((item, index) => {
+  console.log(item);
+
+  return {
+    name: index + 1 + ". " + item.name,
+    start: item.startTime.toFixed(2),
+    duration: item.duration.toFixed(2),
+    size: item.transferSize,
+    encoded: item.encodedBodySize,
+    decoded: item.decodedBodySize,
+  };
+});
 
 console.table(data);
 
-const rows = data.map(row => {
+const rows = data
+  .map((row) => {
     return `
   <tr>
     <td>${row.name}</td>
@@ -26,14 +36,15 @@ const rows = data.map(row => {
     <td>${row.encoded}</td>
     <td>${row.decoded}</td>
   </tr>
-`
-}).join('');
+`;
+  })
+  .join("");
 
 const html = `
   <html>
     <head>
       <meta charset="UTF-8">
-      <title>Scripts loaded before sophi script</title>
+      <title>Scripts loaded before sophi script </title>
       <style>
         body { font-family: sans-serif; margin: 20px; }
         table { border-collapse: collapse; width: 100%; }
@@ -49,7 +60,7 @@ const html = `
       </style>
     </head>
     <body>
-      <h1>Scripts loaded before sophi script</h1>
+      <h1>Scripts loaded before sophi script </h1>
       <table>
         <thead>
           <tr>
@@ -67,8 +78,8 @@ const html = `
   </html>
 `;
 
-const blob = new Blob([html], { type: 'text/html' });
-const anchor = document.createElement('a');
+const blob = new Blob([html], { type: "text/html" });
+const anchor = document.createElement("a");
 anchor.href = URL.createObjectURL(blob);
-anchor.download = 'scripts-loaded-before-sophi-article-id-.html';
+anchor.download = "scripts-loaded-before-sophi-article-id-.html";
 anchor.click();
